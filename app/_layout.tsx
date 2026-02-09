@@ -1,24 +1,34 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import i18n from "@/i18n";
+import { queryClient } from "@/lib/react-query";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Stack } from "expo-router";
+import { useEffect } from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    const loadLanguage = async () => {
+      const language = await AsyncStorage.getItem("user-language");
+      if (language) {
+        i18n.changeLanguage(language);
+      }
+    };
+
+    loadLanguage();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <QueryClientProvider client={queryClient}>
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(public)" options={{ headerShown: false }} />
+        </Stack>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
