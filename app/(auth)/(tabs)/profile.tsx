@@ -1,52 +1,23 @@
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { SignOutButton } from "@/components/sign-out-button";
+import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-
-// Placeholder for missing SignOutButton - replace with actual path if it exists
-// import { SignOutButton } from '@/components/sign-out-button';
-
-const theme = {
-  colors: {
-    background: "#f8f9fa",
-    card: "#ffffff",
-    text: "#000000",
-    textSecondary: "#6c757d",
-    primary: "#007bff",
-    border: "#dee2e6",
-    error: "#dc3545",
-  },
-  spacing: {
-    s: 8,
-    m: 16,
-    l: 24,
-  },
-};
-
-// Simple responsive text function placeholder to fix 'rt' errors
-const dt = (size: number) => size;
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
-  const { signOut } = useAuth();
   const { user } = useUser();
   const router = useRouter();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (err: any) {
-      console.error("Error signing out:", err);
-    }
-  };
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,18 +44,10 @@ export default function ProfileScreen() {
             onPress={() => router.push("/account")}
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons
-                name="person-outline"
-                size={20}
-                color={theme.colors.text}
-              />
+              <Ionicons name="person-outline" size={20} color="#000" />
               <Text style={styles.menuItemText}>Personal Information</Text>
             </View>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.colors.textSecondary}
-            />
+            <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -93,18 +56,10 @@ export default function ProfileScreen() {
             onPress={() => router.push("/(auth)/language-selection")}
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons
-                name="globe-outline"
-                size={20}
-                color={theme.colors.text}
-              />
+              <Ionicons name="globe-outline" size={20} color="#000" />
               <Text style={styles.menuItemText}>Language</Text>
             </View>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.colors.textSecondary}
-            />
+            <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
         </View>
 
@@ -117,24 +72,14 @@ export default function ProfileScreen() {
             }
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons
-                name="help-circle-outline"
-                size={20}
-                color={theme.colors.text}
-              />
+              <Ionicons name="help-circle-outline" size={20} color="#000" />
               <Text style={styles.menuItemText}>Help Center</Text>
             </View>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={theme.colors.textSecondary}
-            />
+            <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
-          <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
+        <SignOutButton />
       </ScrollView>
     </SafeAreaView>
   );
@@ -143,45 +88,45 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: "#f5f5f5",
   },
   contentContainer: {
-    padding: theme.spacing.m,
+    padding: 16,
   },
   header: {
     alignItems: "center",
-    marginBottom: theme.spacing.l,
-    marginTop: theme.spacing.m,
+    marginBottom: 24,
+    marginTop: 16,
   },
   avatarContainer: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "#007AFF",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: theme.spacing.s,
+    marginBottom: 8,
   },
   avatarText: {
-    fontSize: dt(32),
+    fontSize: 32,
     color: "#fff",
     fontWeight: "bold",
   },
   userName: {
-    fontSize: dt(20),
+    fontSize: 20,
     fontWeight: "600",
-    color: theme.colors.text,
+    color: "#000",
     marginBottom: 4,
   },
   userEmail: {
-    fontSize: dt(14),
-    color: theme.colors.textSecondary,
+    fontSize: 14,
+    color: "#999",
   },
   section: {
-    backgroundColor: theme.colors.card,
+    backgroundColor: "#fff",
     borderRadius: 12,
-    padding: theme.spacing.m,
-    marginBottom: theme.spacing.m,
+    padding: 16,
+    marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -189,10 +134,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   sectionTitle: {
-    fontSize: dt(14),
+    fontSize: 14,
     fontWeight: "600",
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.m,
+    color: "#999",
+    marginBottom: 16,
     textTransform: "uppercase",
   },
   menuItem: {
@@ -201,29 +146,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: "#e0e0e0",
   },
   menuItemLeft: {
     flexDirection: "row",
     alignItems: "center",
   },
   menuItemText: {
-    fontSize: dt(16),
-    color: theme.colors.text,
+    fontSize: 16,
+    color: "#000",
     marginLeft: 12,
   },
   logoutButton: {
-    marginTop: theme.spacing.m,
-    backgroundColor: theme.colors.card,
-    padding: theme.spacing.m,
+    marginTop: 16,
+    backgroundColor: "#fff",
+    padding: 16,
     borderRadius: 12,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: theme.colors.error,
+    borderColor: "#ff3b30",
   },
   logoutText: {
-    color: theme.colors.error,
+    color: "#ff3b30",
     fontWeight: "600",
-    fontSize: dt(16),
+    fontSize: 16,
   },
 });
