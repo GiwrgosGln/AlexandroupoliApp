@@ -1,13 +1,14 @@
-import { SignOutButton } from "@/components/sign-out-button";
-import { useUser } from "@clerk/clerk-expo";
+import { Colors } from "@/constants/colors";
+import { useClerk, useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
-import * as React from "react";
-import { useTranslation } from "react-i18next";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   Alert,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -16,55 +17,150 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   const { user } = useUser();
+  const { signOut } = useClerk();
   const router = useRouter();
-  const { t } = useTranslation();
+  const [isOfflineModeEnabled, setOfflineModeEnabled] = useState(true);
+  const [isPushNotificationEnabled, setPushNotificationEnabled] =
+    useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.replace("/sign-in");
+    } catch (error) {
+      console.error(JSON.stringify(error, null, 2));
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ title: "Profile", headerShown: true }} />
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.header}>
-          <View style={styles.avatarContainer}>
-            <Text style={styles.avatarText}>
-              {user?.firstName?.charAt(0) || "U"}
-            </Text>
+          <View style={styles.avatarWrapper}>
+            <View style={styles.avatarContainer}>
+              {user?.imageUrl ? (
+                <Image
+                  source={{ uri: user.imageUrl }}
+                  style={styles.avatarImage}
+                />
+              ) : (
+                <View style={styles.avatarFallback}>
+                  <Text style={styles.avatarText}>
+                    {user?.firstName?.charAt(0) || "U"}
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.cameraBadge}>
+              <Ionicons
+                name="camera"
+                size={14}
+                color={Colors.background.primary}
+              />
+            </View>
           </View>
-          <Text style={styles.userName}>{user?.fullName || "User Name"}</Text>
+
+          <Text style={styles.userName}>{user?.username}</Text>
+
           <Text style={styles.userEmail}>
             {user?.primaryEmailAddress?.emailAddress}
           </Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
+        <Text style={styles.sectionLabel}>SETTINGS</Text>
 
+        <View style={styles.sectionCard}>
           <TouchableOpacity
-            style={styles.menuItem}
-            // Navigate to sibling screen 'account' inside (auth)
-            onPress={() => router.push("/account")}
+            style={[styles.menuItem, styles.menuItemWithoutBorder]}
+            onPress={() => router.push("/(auth)/account")}
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons name="person-outline" size={20} color="#000" />
-              <Text style={styles.menuItemText}>Personal Information</Text>
+              <Ionicons name="person" size={18} color={Colors.text.secondary} />
+              <Text style={styles.menuItemText}>Account</Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+
+            <View style={styles.rightControl}>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={Colors.text.secondary}
+              />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.menuItem}
-            // Navigate to sibling screen 'language-selection' inside (auth)
+            onPress={() => Alert.alert("Saved Places", "Coming soon")}
+          >
+            <View style={styles.menuItemLeft}>
+              <Ionicons
+                name="bookmark"
+                size={18}
+                color={Colors.text.secondary}
+              />
+              <Text style={styles.menuItemText}>Saved Places</Text>
+            </View>
+
+            <View style={styles.rightControl}>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={Colors.text.secondary}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.menuItem}>
+            <View style={styles.menuItemLeft}>
+              <Ionicons
+                name="notifications"
+                size={18}
+                color={Colors.text.secondary}
+              />
+              <Text style={styles.menuItemText}>Push Notifications</Text>
+            </View>
+
+            <View style={styles.rightControl}>
+              <Switch
+                value={isPushNotificationEnabled}
+                onValueChange={setPushNotificationEnabled}
+                trackColor={{
+                  false: Colors.border.primary,
+                  true: Colors.primary,
+                }}
+                thumbColor={Colors.background.primary}
+                ios_backgroundColor={Colors.border.primary}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.menuItem, styles.menuItemWithoutBorder]}
             onPress={() => router.push("/(auth)/language-selection")}
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons name="globe-outline" size={20} color="#000" />
+              <Ionicons
+                name="language"
+                size={18}
+                color={Colors.text.secondary}
+              />
               <Text style={styles.menuItemText}>Language</Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+
+            <View style={[styles.rightControl, styles.rightValueWithChevron]}>
+              <Text style={styles.valueText}>English</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={Colors.text.secondary}
+              />
+            </View>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
+        <Text style={styles.sectionLabel}>SUPPORT</Text>
+
+        <View style={styles.sectionCard}>
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() =>
@@ -72,14 +168,53 @@ export default function ProfileScreen() {
             }
           >
             <View style={styles.menuItemLeft}>
-              <Ionicons name="help-circle-outline" size={20} color="#000" />
+              <Ionicons
+                name="help-circle"
+                size={18}
+                color={Colors.text.secondary}
+              />
               <Text style={styles.menuItemText}>Help Center</Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+
+            <View style={styles.rightControl}>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={Colors.text.secondary}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.menuItem, styles.menuItemWithoutBorder]}
+            onPress={() =>
+              Alert.alert("Rate", "Rating functionality coming soon")
+            }
+          >
+            <View style={styles.menuItemLeft}>
+              <Ionicons
+                name="thumbs-up"
+                size={18}
+                color={Colors.text.secondary}
+              />
+              <Text style={styles.menuItemText}>Rate the App</Text>
+            </View>
+
+            <View style={styles.rightControl}>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={Colors.text.secondary}
+              />
+            </View>
           </TouchableOpacity>
         </View>
 
-        <SignOutButton />
+        <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.footerText}>MyAXD v1.0.0</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -88,87 +223,142 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: Colors.background.secondary,
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
   header: {
     alignItems: "center",
-    marginBottom: 24,
-    marginTop: 16,
+    marginBottom: 14,
+    marginTop: 8,
+  },
+  avatarWrapper: {
+    marginBottom: 8,
+    position: "relative",
   },
   avatarContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#007AFF",
+    width: 92,
+    height: 92,
+    borderRadius: 46,
+    backgroundColor: Colors.background.primary,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
+    padding: 1.5,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 44,
+  },
+  avatarFallback: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 44,
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cameraBadge: {
+    position: "absolute",
+    right: -1,
+    bottom: 4,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: Colors.background.primary,
   },
   avatarText: {
     fontSize: 32,
-    color: "#fff",
+    color: Colors.background.primary,
     fontWeight: "bold",
   },
   userName: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: "600",
-    color: "#000",
-    marginBottom: 4,
+    color: Colors.text.primary,
+    lineHeight: 34,
   },
   userEmail: {
-    fontSize: 14,
-    color: "#999",
+    marginTop: 4,
+    fontSize: 13,
+    color: Colors.text.secondary,
   },
-  section: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
+  sectionLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: Colors.text.secondary,
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    marginTop: 4,
+  },
+  sectionCard: {
+    backgroundColor: Colors.background.primary,
+    borderRadius: 10,
+    paddingHorizontal: 12,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
     elevation: 2,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#999",
-    marginBottom: 16,
-    textTransform: "uppercase",
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 12,
+    height: 62,
     borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: Colors.background.secondary,
+  },
+  menuItemWithoutBorder: {
+    borderBottomWidth: 0,
   },
   menuItemLeft: {
     flexDirection: "row",
     alignItems: "center",
   },
   menuItemText: {
-    fontSize: 16,
-    color: "#000",
-    marginLeft: 12,
+    fontSize: 17,
+    color: Colors.text.primary,
+    marginLeft: 10,
+  },
+  valueText: {
+    fontSize: 15,
+    color: Colors.text.secondary,
+    textAlign: "right",
+  },
+  rightControl: {
+    width: 84,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  rightValueWithChevron: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   logoutButton: {
-    marginTop: 16,
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 12,
+    marginTop: 2,
+    backgroundColor: Colors.background.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ff3b30",
   },
   logoutText: {
-    color: "#ff3b30",
+    color: Colors.danger,
     fontWeight: "600",
     fontSize: 16,
+  },
+  footerText: {
+    marginTop: 12,
+    textAlign: "center",
+    fontSize: 12,
+    color: Colors.text.secondary,
   },
 });

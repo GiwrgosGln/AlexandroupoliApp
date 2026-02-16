@@ -34,12 +34,13 @@ export default function AuthLayout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
       {/* Profile Screens */}
-      <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen name="account" options={{ headerShown: false }} />
       <Stack.Screen
         name="language-selection"
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="change-password" options={{ headerShown: false }} />
+      <Stack.Screen name="change-username" options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -9,7 +9,7 @@ export const Colors = {
 
   background: {
     primary: "#FFFFFF",
-    secondary: "#E0E0E0",
+    secondary: "#F0F2F5",
   },
 
   border: {
@@ -20,6 +20,10 @@ export const Colors = {
     background: "#E3F2FD",
     text: "#2196F3",
   },
+
+  success: "#4CAF50",
+  warning: "#FFC107",
+  danger: "#EE4444",
 
   shadow: "#000",
 } as const;
