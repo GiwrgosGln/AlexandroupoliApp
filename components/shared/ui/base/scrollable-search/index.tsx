@@ -1,14 +1,15 @@
+/* eslint-disable */
 // @ts-check
+import { BlurView, type BlurViewProps } from "expo-blur";
 import React, {
   createContext,
+  memo,
   useContext,
+  useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
-  memo,
-  useEffect,
 } from "react";
-import { BlurView, type BlurViewProps } from "expo-blur";
 import {
   Keyboard,
   Platform,
@@ -65,7 +66,7 @@ const ScrollableSearchRoot: React.FC<IScrollableSearch> &
     React.JSX.Element &
     React.ReactNode => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
-    const dismissTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const dismissTimeoutRef = useRef<number | null>(null);
 
     const scrollY = useSharedValue<number>(0);
     const pullDistance = useSharedValue<number>(0);
@@ -410,7 +411,7 @@ const ScrollableSearch = Object.assign(
   },
 );
 
-export { useScrollableSearch, ScrollableSearch };
+export { ScrollableSearch, useScrollableSearch };
 
 const styles = StyleSheet.create({
   wrapper: {

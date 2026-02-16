@@ -7,7 +7,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function AuthLayout() {
   const { isSignedIn, isLoaded, userId } = useAuth();
-  const { data: user, isLoading: isUserLoading } = useUser({ userId: userId! });
+  const { isLoading: isUserLoading } = useUser({ userId: userId! });
 
   useEffect(() => {
     if (isLoaded) {

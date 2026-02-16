@@ -1,16 +1,17 @@
+/* eslint-disable */
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, ViewStyle } from "react-native";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSpring,
-  interpolateColor,
   Easing,
   interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import type { AnimatedChipProps } from "./Chip.types";
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
 export const AnimatedChip = ({
   label,

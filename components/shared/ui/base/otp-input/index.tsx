@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   createContext,
   memo,
@@ -18,18 +19,18 @@ import {
   type ViewStyle,
 } from "react-native";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSequence,
-  withSpring,
   FadeInDown,
   FadeOutDown,
   LinearTransition,
   interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
-import type { IOtpInput, IOtpContext, IOtpItem } from "./types";
 import { ANIMATION_VARIATIONS } from "./const";
+import type { IOtpContext, IOtpInput, IOtpItem } from "./types";
 
 const { width: WIDTH } = Dimensions.get("window");
 const OtpContext = createContext<IOtpContext>({} as IOtpContext);

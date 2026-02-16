@@ -19,7 +19,6 @@ export default function ProfileScreen() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
-  const [isOfflineModeEnabled, setOfflineModeEnabled] = useState(true);
   const [isPushNotificationEnabled, setPushNotificationEnabled] =
     useState(false);
 

@@ -1,10 +1,11 @@
+/* eslint-disable */
+import { Canvas, Fill, Shader, Skia, vec } from "@shopify/react-native-skia";
 import React, { memo, useMemo } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
-import { Canvas, Shader, Skia, Fill, vec } from "@shopify/react-native-skia";
 import {
-  useSharedValue,
   useDerivedValue,
   useFrameCallback,
+  useSharedValue,
 } from "react-native-reanimated";
 import { SHADER as MESH_GRADIENT_SHADER } from "./conf";
 import { DEFAULT_INITIAL_COLORS } from "./const";

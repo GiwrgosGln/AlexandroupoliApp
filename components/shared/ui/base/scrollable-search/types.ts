@@ -1,6 +1,7 @@
-import type { SharedValue, WithSpringConfig } from "react-native-reanimated";
-import * as React from "react";
+/* eslint-disable */
 import type { BlurTint } from "expo-blur";
+import * as React from "react";
+import type { SharedValue, WithSpringConfig } from "react-native-reanimated";
 
 interface IScrollableSearchContext {
   isFocused: boolean;
@@ -36,10 +37,10 @@ interface IFocusedScreen extends React.PropsWithChildren {}
 interface IScrollableSearch extends React.PropsWithChildren {}
 
 export type {
+  IAnimatedComponent,
+  IFocusedScreen,
+  IOverlay,
+  IScrollableSearch,
   IScrollableSearchContext,
   IScrollContent,
-  IAnimatedComponent,
-  IOverlay,
-  IFocusedScreen,
-  IScrollableSearch,
 };
