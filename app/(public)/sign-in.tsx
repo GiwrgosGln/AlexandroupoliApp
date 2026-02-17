@@ -1,8 +1,19 @@
 import { useSignIn } from "@clerk/clerk-expo";
+import { Image } from "expo-image";
 import { Link, useRouter } from "expo-router";
+import { Button, Description, Input, Label, TextField } from "heroui-native";
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const logo = require("../../assets/images/MyAXD-logo.png");
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -98,28 +109,58 @@ export default function Page() {
 
   return (
     <SafeAreaView>
-      <Text>Sign in</Text>
-      <TextInput
-        autoCapitalize="none"
-        value={emailAddress}
-        placeholder="Enter email"
-        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-      />
-      <TextInput
-        value={password}
-        placeholder="Enter password"
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TouchableOpacity onPress={onSignInPress}>
-        <Text>Continue</Text>
-      </TouchableOpacity>
-      <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
-        <Text>Don&apos;t have an account?</Text>
-        <Link href="/sign-up">
-          <Text>Sign up</Text>
-        </Link>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View className="flex-col items-center gap-2 my-10">
+          <Image
+            source={logo}
+            style={{ width: 120, height: 120 }}
+            contentFit="contain"
+            accessible
+            accessibilityLabel="App logo"
+          />
+          <Text className="text-3xl font-bold text-center">Welcome back</Text>
+          <Text className="text-md text-gray-500 text-center">
+            Please enter your details.
+          </Text>
+        </View>
+        <View className="flex-col px-4 gap-4">
+          <TextField>
+            <Label>Email</Label>
+            <Input
+              autoCapitalize="none"
+              value={emailAddress}
+              placeholder="Enter email"
+              onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+            />
+            <Description>
+              We never share your email with anyone else.
+            </Description>
+          </TextField>
+          <TextField>
+            <Label>Password</Label>
+            <Input
+              value={password}
+              placeholder="Enter password"
+              secureTextEntry={true}
+              onChangeText={(password) => setPassword(password)}
+            />
+            <Description>
+              Your password must be at least 8 characters long.
+            </Description>
+          </TextField>
+          <Button onPress={onSignInPress} className="mt-10">
+            Sign In
+          </Button>
+          <View className="flex-row text-center gap-1 justify-center">
+            <Text className="text-gray-500">Don&apos;t have an account?</Text>
+            <Link href="/sign-up">
+              <Text className="text-blue-500 font-bold">Sign up</Text>
+            </Link>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

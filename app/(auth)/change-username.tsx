@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
+import { Button, Description, Input, Label, TextField } from "heroui-native";
 import { useState } from "react";
-import { Button, StyleSheet, TextInput } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ChangeUsernameScreen() {
@@ -24,15 +25,22 @@ export default function ChangeUsernameScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TextInput placeholder="New Username" onChangeText={setNewUsername} />
-      <Button title="Update Username" onPress={updateUsername} />
+    <SafeAreaView className="flex-1">
+      <View className="flex-col px-4">
+        <TextField>
+          <Label>New Username</Label>
+          <Input
+            placeholder="Enter your new username"
+            onChangeText={setNewUsername}
+          />
+          <Description>
+            Your username must be unique and contain only letters and numbers.
+          </Description>
+        </TextField>
+        <Button onPress={updateUsername} className="mt-10">
+          Update Username
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

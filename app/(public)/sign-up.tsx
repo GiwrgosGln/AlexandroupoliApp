@@ -1,9 +1,19 @@
-import { OtpInput } from "@/components/shared/ui/base/otp-input";
 import { useSignUp } from "@clerk/clerk-expo";
+import { Image } from "expo-image";
 import { Link, useRouter } from "expo-router";
+import {
+  Button,
+  Description,
+  Input,
+  InputOTP,
+  Label,
+  TextField,
+} from "heroui-native";
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const logo = require("../../assets/images/MyAXD-logo.png");
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -57,7 +67,7 @@ export default function SignUpScreen() {
       // and redirect the user
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
-        router.replace("/(tabs)");
+        router.replace("/");
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
@@ -73,49 +83,112 @@ export default function SignUpScreen() {
   if (pendingVerification) {
     return (
       <SafeAreaView>
-        <Text>Verify your email</Text>
-        <OtpInput
-          otpCount={6}
-          onInputChange={(code: string) => setCode(code)}
-        />
-        <TouchableOpacity onPress={onVerifyPress}>
-          <Text>Verify</Text>
-        </TouchableOpacity>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View className="flex-col items-center gap-2 my-10">
+            <Image
+              source={logo}
+              style={{ width: 120, height: 120 }}
+              contentFit="contain"
+              accessible
+              accessibilityLabel="App logo"
+            />
+            <Text className="text-3xl font-bold text-center">
+              Verify your email
+            </Text>
+            <Text className="text-md text-gray-500 text-center">
+              Enter the 6-digit code sent to your email.
+            </Text>
+          </View>
+          <View className="flex-col justify-center items-center px-4 gap-4">
+            <InputOTP value={code} onChange={setCode} maxLength={6}>
+              <InputOTP.Group>
+                <InputOTP.Slot index={0} />
+                <InputOTP.Slot index={1} />
+                <InputOTP.Slot index={2} />
+              </InputOTP.Group>
+              <InputOTP.Separator />
+              <InputOTP.Group>
+                <InputOTP.Slot index={3} />
+                <InputOTP.Slot index={4} />
+                <InputOTP.Slot index={5} />
+              </InputOTP.Group>
+            </InputOTP>
+            <Button onPress={onVerifyPress} className="mt-10 w-full">
+              Verify
+            </Button>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
-          value={username}
-          placeholder="Enter username"
-          onChangeText={(username) => setUsername(username)}
-        />
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter email"
-          onChangeText={(email) => setEmailAddress(email)}
-        />
-        <TextInput
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TouchableOpacity onPress={onSignUpPress}>
-          <Text>Continue</Text>
-        </TouchableOpacity>
-        <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <Text>Already have an account?</Text>
-          <Link href="/sign-in">
-            <Text>Sign in</Text>
-          </Link>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View className="flex-col items-center gap-2 my-10">
+          <Image
+            source={logo}
+            style={{ width: 120, height: 120 }}
+            contentFit="contain"
+            accessible
+            accessibilityLabel="App logo"
+          />
+          <Text className="text-3xl font-bold text-center">Create account</Text>
+          <Text className="text-md text-gray-500 text-center">
+            Please enter your details.
+          </Text>
         </View>
-      </>
+        <View className="flex-col px-4 gap-4">
+          <TextField>
+            <Label>Username</Label>
+            <Input
+              value={username}
+              placeholder="Enter username"
+              onChangeText={(username) => setUsername(username)}
+            />
+            <Description>
+              Choose a unique username for your account.
+            </Description>
+          </TextField>
+          <TextField>
+            <Label>Email</Label>
+            <Input
+              autoCapitalize="none"
+              value={emailAddress}
+              placeholder="Enter email"
+              onChangeText={(email) => setEmailAddress(email)}
+            />
+            <Description>
+              We never share your email with anyone else.
+            </Description>
+          </TextField>
+          <TextField>
+            <Label>Password</Label>
+            <Input
+              value={password}
+              placeholder="Enter password"
+              secureTextEntry={true}
+              onChangeText={(password) => setPassword(password)}
+            />
+            <Description>
+              Your password must be at least 8 characters long.
+            </Description>
+          </TextField>
+          <Button onPress={onSignUpPress} className="mt-10">
+            Continue
+          </Button>
+          <View className="flex-row text-center gap-1 justify-center">
+            <Text className="text-gray-500">Already have an account?</Text>
+            <Link href="/sign-in">
+              <Text className="text-blue-500 font-bold">Sign in</Text>
+            </Link>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

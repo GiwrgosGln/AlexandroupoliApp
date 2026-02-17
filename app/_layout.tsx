@@ -5,7 +5,7 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import { HeroUINativeProvider } from "heroui-native";
+import { HeroUINativeConfig, HeroUINativeProvider } from "heroui-native";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Uniwind } from "uniwind";
@@ -27,9 +27,15 @@ export default function RootLayout() {
     loadLanguage();
   }, []);
 
+  const heroUIConfig: HeroUINativeConfig = {
+    devInfo: {
+      stylingPrinciples: false,
+    },
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <HeroUINativeProvider>
+      <HeroUINativeProvider config={heroUIConfig}>
         <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
           <QueryClientProvider client={queryClient}>
             <Stack>
