@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "uniwind";
+@import "heroui-native/styles";
+
+@source './node_modules/heroui-native/lib';
+
+@layer theme {
+  :root {
+    @variant light {
+      --color-accent: oklch(0.65 0.25 270);
+      --color-success: oklch(0.65 0.15 155);
+      --color-background: oklch(0.95 0.05 270);
+    }
+
+    @variant dark {
+      --color-accent: oklch(0.65 0.25 270);
+      --color-success: oklch(0.75 0.12 155);
+      --color-background: oklch(0.15 0.05 270);
+    }
+  }
+}
